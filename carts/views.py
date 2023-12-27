@@ -1,0 +1,51 @@
+from django.shortcuts import render, redirect
+from store.models import Product
+from .models import Cart, CartItem
+# Create your views here.
+
+#Métodos para crear carrito de compras
+
+#Obtiene el cart id tomando en cuenta la sesion del usuario
+def _cart_id(request):
+    cart = request.session.session_key
+    if not cart:
+        cart =request.session.create()
+    return cart
+#Añade al carrito en caso de existir. Si no existe un carrito, cra uno nuevo.
+def add_cart(request, product_id):
+    #Buscar Producto mediante el id
+    product = Product.objects.get(id = product_id)
+    
+    #Crear Carrito en caso de no existir
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(
+            cart_id = _cart_id(request)
+        )
+        
+    cart.save()
+    
+    #Insertando el producto
+    #Busca por producto y por carrito de compras
+    #El seiguiente try es en caso de que ya se encuentre el objeto dentro del carrito
+    try:
+        cart_item = CartItem.objects.get(product=product, cart=cart)
+        cart_item.quantity +=1
+        cart_item.save()
+    #El siguiente Except se lanza cuando es la primera vez añadiendo un producto al carito.
+    except CartItem.DoesNotExist:
+        cart_item = CartItem.objects.create(
+           product = product,
+           quantity = 1,
+           cart = cart, 
+        )
+        
+        cart_item.save()
+    return redirect('cart')
+        
+    
+    
+
+def cart(request):
+    return render(request, 'store/cart.html')
