@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product
 from .models import Cart, CartItem
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 
 #Métodos para crear carrito de compras
@@ -43,9 +44,69 @@ def add_cart(request, product_id):
         
         cart_item.save()
     return redirect('cart')
+
+
+#Quita Productos del carrito   
+def remove_cart(request, product_id):
+    #Para encontrar el objeto Cart en cuestión
+    cart = Cart.objects.get(cart_id=_cart_id(request))  
+    #Para encontrar el objeto Product en cuestión   
+    product = get_object_or_404(Product, id=product_id)
+    #Para encontarr el producto y el carrito que queremos eliminar (La instancia)
+    cart_item = CartItem.objects.get(product=product, cart=cart)
+    
+    #Si el cart_item es > 1, se decrementa. Cualquier otro caso (que sea 0), se elimina.
+    if cart_item.quantity>1:
+        cart_item.quantity -=1
+        cart_item.save()
+    else:
+        cart_item.delete()
         
+    return redirect('cart')
+    #Para retornar una respuesta http en vez de None
+    #No olvidar registrar el path que invoca este método en urls.py
+    
+#Borrar Producto del cart
+def remove_cart_item(request, product_id):
+    #Para encontrar el objeto Cart en cuestión
+    cart = Cart.objects.get(cart_id=_cart_id(request))  
+    #Para encontrar el objeto Product en cuestión   
+    product = get_object_or_404(Product, id=product_id)
+    #Para encontarr el producto y el carrito que queremos eliminar (La instancia)
+    cart_item = CartItem.objects.get(product=product, cart=cart)
+    #Eliminar el item del carrtio
+    cart_item.delete()
+    
+    return redirect('cart')
+    #Para retornar una respuesta http en vez de None
+    
+    
     
     
 
-def cart(request):
-    return render(request, 'store/cart.html')
+def cart(request, total=0, quantity=0, cart_items=None):
+    #Consultar si existe el elemento en la BD
+    try:
+        cart = Cart.objects.get(cart_id= _cart_id(request))
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        #Bucle for para saber precio total y cantitdad total de productos en carrito
+        for cart_item in cart_items:
+            total+= (cart_item.product.price * cart_item.quantity)
+            quantity += cart_item.quantity
+        
+        #Para mostrar el total en el carrito
+        tax = (2*total)/100
+        grand_total = total+tax    
+        
+    except ObjectDoesNotExist:
+        pass #Ignora la excepcion
+    #Diciconario donde se guardaran los elementos declarados anteriormente para mostrarlos en el render.    
+    context = {
+        'total': total,
+        'quantity': quantity,
+        'cart_items': cart_items,
+        'tax': tax,
+        'grand_total':grand_total,
+    }
+    
+    return render(request, 'store/cart.html', context)

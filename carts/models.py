@@ -16,6 +16,13 @@ class CartItem(models.Model):
     quantity = models.IntegerField()
     is_active = models.BooleanField(default=True)
     
+    def sub_total(self):
+        return self.product.price * self.quantity
+    
     def __str__(self):
         return str(self.product)
+    
+    #Otra forma de mostrar el objeto en el carrito. Sin embargo, lo muestra como CartItemObject, no con su nombre
+    #def __unicode__(self):
+        #return self.product
         

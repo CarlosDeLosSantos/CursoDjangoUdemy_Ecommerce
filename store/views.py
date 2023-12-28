@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product
 from category.models import Category
+from carts.models import CartItem
+from carts.views import _cart_id
 # Create your views here.
 def store(request, category_slug=None):
     #PAra filtrar por categorias
@@ -31,11 +33,15 @@ def product_detail(request, category_slug, product_slug):
         #Checar linea comentada para mejor funcionamiento: Validar slug de producto y Slug de categoria
         #single_product = Product.objects.get(category__slug==category_slug, slug=product_slug)
         single_product = Product.objects.get(slug=product_slug)
+        #Checar si el producto ya está en el carrito
+        in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request),product=single_product).exists()
+        
     except Exception as e:
         raise e
-    
+    #Diccionario para almacenar las variables y objetos consultados anteriormente
     context={
         'single_product': single_product,
+        'in_cart': in_cart,
     }
     
     return render(request, 'store/product_detail.html', context)
