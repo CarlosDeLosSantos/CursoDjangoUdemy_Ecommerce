@@ -55,7 +55,14 @@ class Variation(models.Model):
     
     #__unicode__ retorna el objeto de tipo objeto. Se debe realizar la respectiva variacion en admin.py para que muetsre todos los
     #datos del objeto en cuestión y no solo un variationobject
-    def __unicode__(self):
-        return self.product
+    # def __unicode__(self):
+    #     return self.product
+    
+    
+    #Realizando otro __str__ para que retorne de manera más legible las variations en Admin
+    def __str__(self):
+        return self.variation_category + ':' + self.variation_value
+    
+    
     
 #No olvidar registar los modelso en Admin.py
