@@ -142,6 +142,18 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR : 'danger',
 }
+#Para las verificaciones de Email
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'caraledso@gmail.com'
+# EMAIL_HOST_PASSWORD = '1234567890'
+
+#Alternativa Actualizada con Mailtrap.io
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '8cf4ad74705db9'
+EMAIL_HOST_PASSWORD = '076b37fbab2ad7'
+EMAIL_PORT = '2525'
+EMAIL_USE_TLS = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
