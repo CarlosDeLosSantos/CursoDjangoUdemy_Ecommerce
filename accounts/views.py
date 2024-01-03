@@ -53,7 +53,7 @@ def register(request):
             
             #Mensaje de succes
             #messages.success(request, 'Se Registró El Usuario Correctamente')
-            return redirect('accounts/login/?command=verification&email='+email)
+            return redirect('/accounts/login/?command=verification&email='+email)
 
     
     #El diccionario context es para guardar los objetos de tipo form
@@ -94,9 +94,9 @@ def logout(request):
     return redirect('login')
 
 #Activación de Cuenta vía eMail
-def activate(request, uid64, token):
+def activate(request, uidb64, token):
     try:
-        uid = urlsafe_base64_decode(uidb64).decode
+        uid = urlsafe_base64_decode(uidb64).decode()
         user = Account._default_manager.get(pk=uid)
     except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
@@ -104,7 +104,7 @@ def activate(request, uid64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.succes(request, 'Felicidades, tu cuenta ha sido activada')
+        messages.success(request, 'Felicidades, tu cuenta ha sido activada')
         return redirect('login')
     else:
         messages.error(request, 'La activación es inválida')

@@ -148,11 +148,11 @@ MESSAGE_TAGS = {
 # EMAIL_HOST_USER = 'caraledso@gmail.com'
 # EMAIL_HOST_PASSWORD = '1234567890'
 
-#Alternativa Actualizada con Mailtrap.io
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = '8cf4ad74705db9'
-EMAIL_HOST_PASSWORD = '076b37fbab2ad7'
-EMAIL_PORT = '2525'
+#Alternativa Actualizada con contraseñas de aplicación de Google
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'trickytraks3@gmail.com'
+EMAIL_HOST_PASSWORD = 'tjds fafq baib umwp'
 EMAIL_USE_TLS = True
 
 # Default primary key field type
