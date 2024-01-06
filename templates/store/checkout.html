@@ -15,6 +15,9 @@
         <div class="card-body">
             <h4 class="card-title mb-4">Dirección de Facturación</h4>
             <form action="" method="post">
+
+                {% csrf_token %}
+
                 <div class="form-row">
 
                     <div class="col form-group">
@@ -75,7 +78,7 @@
 
                 </div>
 
-            </form>
+            
         
 
     
@@ -94,7 +97,6 @@
                       <th scope="col">Product</th>
                       <th scope="col" width="120">Cantidad</th>
                       <th scope="col" width="120">Precio</th>
-                      <th scope="col" class="text-right" width="200"> </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -126,44 +128,14 @@
                             </figure>
                         </td>
                         <td> 
-                            <!-- col.// -->
-                                        <div class="col"> 
-                                            <div class="input-group input-spinner">
-                                                <div class="input-group-prepend">
-                                                <a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </a>
-                                                <!--Considerando que la fubncion #remove_cart tiene la funcionalidad para disminuir, 
-                                                para el funcionamiento de los botones se les considera commo enlaces a que llaman la url de tal método y toman como parámetro #cart_item.product.id-->
-                                                </div>
-                                                <input type="text" class="form-control"  value="{{cart_item.quantity}}">
-                                                <div class="input-group-append">
-                
-                                                <form action="{% url 'add_cart' cart_item.product.id %}" method="post">
-                
-                                                    {% csrf_token %}
-                
-                                                    {% for item in cart_item.variations.all  %}
-                
-                                                    <input type="hidden" name="{{item.variation_category | lower}}" value="{{item.variation_value | capfirst}}">
-                
-                                                    {% endfor %}
-                                                <button class="btn btn-light" type="submit" id="button-minus"> <i class="fa fa-plus"></i> </button>
-                                                <!--Considerando que la fubncion #add_cart tiene la funcionalidad para aumentar, 
-                                                para el funcionamiento de los botones se les considera commo enlaces a que llaman la url de tal método y toman como parámetro #cart_item.product.id-->
-                                                
-                                                </form>
-                
-                                                </div>
-                                            </div> <!-- input-group.// -->
-                                        </div> <!-- col.// -->
+                            <label for="">{{ cart_item.quantity}}</label>
+
                         </td>
                         <td> 
                             <div class="price-wrap"> 
                                 <var class="price">${{cart_item.sub_total}}</var> 
                                 <small class="text-muted"> ${{cart_item.product.price}}</small> 
                             </div> <!-- price-wrap .// -->
-                        </td>
-                        <td class="text-right"> 
-                        <a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" class="btn btn-danger"> Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -172,8 +144,9 @@
 
 
 
-                <a href="./place-order.html" class="btn btn-primary btn-block"> Ordenar Productos</a>
+                <button type="submit" name="submit" class="btn btn-primary btn-block"> Ordenar Productos</button>
                 <a href="{% url 'store' %}" class="btn btn-light btn-block">Continua comprando</a>
+            </form>
             </div> <!-- card-body.// -->
             </div> <!-- card.// -->
     

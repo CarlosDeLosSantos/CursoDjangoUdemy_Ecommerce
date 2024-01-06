@@ -8,9 +8,14 @@ def counter(request):
         #Para buscar el carrito.
         #Para filtrar el objeto Cart en cuestión
         cart = Cart.objects.filter(cart_id=_cart_id(request))  
+        
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.all().filter(user=request.user)
+        else:
+        
         #Para filtrar los elementos del carrito de compras
         #Como porm defecto trae un arreglo, se especifica que traiga solo un elemento (La busqueda hecha inicialmente en la linea anterior)
-        cart_items = CartItem.objects.all().filter(cart=cart[:1])
+            cart_items = CartItem.objects.all().filter(cart=cart[:1])
     
         #PAra saber la cantitad total de productos en el carrito
         for cart_item in cart_items:
