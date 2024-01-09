@@ -10,8 +10,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
+
 from carts.views import _cart_id
 from carts.models import Cart, CartItem
+import requests
 
 # Create your views here.
 
@@ -115,9 +117,24 @@ def login(request):
             except:
                 pass
             
+            #############################
+            
             auth.login(request, user)
             messages.success(request, 'Sesión iniciada Exitosamente')
-            return redirect('dashboard')
+            #http://localhost:8000/accounts/login/?next=/cart/checkout/
+            #Para mandar al usuario al checkout en vez del dashboard (Cuando añada productos al carrito sin iniciar sesión)
+            url = request.META.get('HTTP_REFERER')
+            #PAra podr capturar el parámetro del url
+            #next=/cart/checkout/
+            try:
+                query = requests.utils.urlparse(url).query
+                params = dict(x.split('=') for x in query.split('&'))
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+            except:
+                return redirect('dashboard')
+                
         else:
             messages.error(request,'Las credenciales son incorrectas')
             return redirect('login')
