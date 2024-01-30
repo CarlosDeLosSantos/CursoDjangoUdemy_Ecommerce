@@ -71,6 +71,10 @@ class Account(AbstractBaseUser):
     #Para incluir los métodos de MyAccountManager dentro del modelo Account
     objects = MyAccountManager()
     
+    #Para nombre completo
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+    
     #Para definir que el email es con el que lista al usuario
     def __str__(self):
         return self.email
