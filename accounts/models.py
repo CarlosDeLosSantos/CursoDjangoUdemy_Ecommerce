@@ -90,3 +90,22 @@ class Account(AbstractBaseUser):
     
     #Como se han realizado modificaciones directas sobre el Framework, no olvidar borrar los registros realizados con anterioridad en archivo db.sqlite3
     #Tambien, eliminar las migraciones realizadas con anterioridad
+    
+#Clase para Perfil de Usuario (A diferencia de account, tendra imagen, detalles de direcci+on, etc)
+class UserProfile(models.Model):
+    #OneToOne perfmite ahcer uan relación uno a uno en DB desde Python
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    address_line_1 = models.CharField(blank=True, max_length=100)
+    address_line_2 = models.CharField(blank=True, max_length=100)
+    profile_picture = models.ImageField(blank=True, upload_to='userprofile')
+    city = models.CharField(blank=True, max_length=20)
+    state = models.CharField(blank=True, max_length=20)
+    country = models.CharField(blank=True, max_length=20)
+    
+    def __str__(self):
+        return self.user.first_name
+    
+    def full_address(self):
+        return f'{self.address_line_1}{self.address_line_2}'
+    
+    
